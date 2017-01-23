@@ -1,4 +1,4 @@
-#import diagnostics
+import diagnostics
 
 # example file
 import gcd
@@ -8,5 +8,5 @@ import gcd
 
 
 
-print gcd.gcd(2,4)
+print computeAllJust([24,54,12,5],gcd.gcd)
 
