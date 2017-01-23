@@ -1,6 +1,8 @@
 #  Input: a set of positive integers
 #  Problem: check if the input set numbers have a common prime number factor (GCD > 1)
 
+import diagnostics
+
 def gcd(a,b):
     while b:
         (a, b) = (b, a % b)
@@ -21,5 +23,8 @@ L2 = [24,54,12,5]
 
 print L1, gcd_list(L1), has_common_prime(L1)
 print L2, gcd_list(L2), has_common_prime(L2)
+
+
+print diagnostics.computeAllJust(L1, has_common_prime)
 
 
