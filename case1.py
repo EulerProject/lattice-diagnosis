@@ -8,5 +8,5 @@ import gcd
 
 
 
-print computeAllJust([24,54,12,5],gcd.gcd)
+print diagnostics.computeAllJust([24,54,12,5],gcd.gcd)
 
