@@ -1270,9 +1270,11 @@ class TaxonomyMapping:
             print "]"
             print "************************************"
         return True
-    
+    '''
     # return consistent or ambiguous
     def diagnosisAskOracle(self, artSet, flag):
+        return flag(artSet)
+    '''
         # Consistency check
         if flag == 'Consistency':
             if not reasoner[self.args['-r']] == reasoner["rcc1"]:
@@ -1296,21 +1298,17 @@ class TaxonomyMapping:
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
         # prepare the internal files
-        if flag == 'Consistency':
-            f = open(self.misinternalfiles, "a")
-        elif flag == 'Ambiguity':
-            f = open(self.masinternalfiles, "a")
+        f = open(self.misinternalfiles, "a")
         
         # prepare cashed path
         for path in allpaths:
             if path.issubset(curpath):
                 return
-        '''
         # ask oracle question
         if self.diagnosisAskOracle(artSet, flag):
             allpaths.add(curpath)
             return
-        '''               
+                      
         # prepare the justification set
         j = sets.Set()
         for s in justSet:
@@ -1323,6 +1321,7 @@ class TaxonomyMapping:
             if len(j) != 0:
                 
                 # Consistency output
+                '''
                 if flag == 'Consistency':
                     # output mis
                     if not reasoner[self.args['-r']] == reasoner["rcc1"]:
@@ -1355,7 +1354,6 @@ class TaxonomyMapping:
                         print "]"
                         print "************************************"
                         self.fixedCnt += 1
-                        
                 # Ambiguity output
                 elif flag == 'Ambiguity':
                     # output mas
@@ -1401,7 +1399,7 @@ class TaxonomyMapping:
                         print "]"
                         print "************************************"
                         self.fixedCnt += 1
-        
+        '''
         # update justification set
         if len(j) != 0:
             justSet.add(j)
@@ -1411,7 +1409,7 @@ class TaxonomyMapping:
             tmpart = copy.copy(artSet)
             tmpart.remove(a)
             self.computeAllJust(tmpart, justSet, tmpcur, allpaths, flag)
-            
+    '''        
     def isConsistent(self, artSet):
         tmpart1 = copy.copy(self.articulations)
         tmpmir = copy.deepcopy(self.mir)
@@ -1495,7 +1493,7 @@ class TaxonomyMapping:
         f.close()
         
         return numOfPw > 1
-
+    '''
     # Compute all justifications in FOURINONE, contains two appraoches: inc and amb
     def allJustificationsFourinone(self, artSet):
         sInc = sets.Set() # justification set for inconsistency
