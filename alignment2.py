@@ -44,6 +44,7 @@ import fileinput
 import sys
 import csv
 import Queue
+import copy
 '''
 from taxonomy2 import *
 from redCon import *
@@ -87,7 +88,9 @@ class TaxonomyMapping:
         self.pw = ""
         self.npw = 0                           # # of pws
         self.pwflag = True                     # Whether to output pw
+        '''
         self.fixedCnt = 0                      # # of fixes /repairs
+        '''
         self.rcgVizNodes = {}                  # nodes for rcg visualization in stylesheet
         self.rcgVizEdges = {}                  # edges for rcg visualization in stylesheet
         self.clusterVizNodes = {}              # nodes for cluster visualization in stylesheet
@@ -95,7 +98,9 @@ class TaxonomyMapping:
         self.leafConcepts = []                 # concepts from input that are leaf nodes
         self.nonleafConcepts = []              # concepts from input that are not leaf nodes
         self.nosiblingdisjointness = []        # pairs that has no sibling disjointness
+        '''
         self.artIndex = []                     # articulations string with index
+        '''
         self.artDict = {}                      # dictionary map articulation with articulation index
         self.artDictBin = {}                   # dictionary map articulation with binary index
         self.arts2NumPW = {}                   # dictionary map articulation sets to number of PW
@@ -1298,17 +1303,19 @@ class TaxonomyMapping:
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
         # prepare the internal files
-        f = open(self.misinternalfiles, "a")
+        #f = open(self.misinternalfiles, "a")
+        f = open("parisaOut.txt","w")
         
         # prepare cashed path
         for path in allpaths:
             if path.issubset(curpath):
                 return
+            '''
         # ask oracle question
         if self.diagnosisAskOracle(artSet, flag):
             allpaths.add(curpath)
             return
-                      
+        '''                     
         # prepare the justification set
         j = sets.Set()
         for s in justSet:
@@ -1319,41 +1326,43 @@ class TaxonomyMapping:
         if len(j) == 0:
             j = self.computeOneJust(artSet, flag)
             if len(j) != 0:
-                
+            
                 # Consistency output
-                '''
-                if flag == 'Consistency':
+                # if flag == 'Consistency':
                     # output mis
-                    if not reasoner[self.args['-r']] == reasoner["rcc1"]:
-                        lj = list(j)
-                        print "************************************"
-                        f.write("MIS "+str(self.fixedCnt)+": [",)
-                        print "Min inconsistent subset ",self.fixedCnt,": [",
-                        for i in range(len(lj)):
-                            if i != 0:
-                                f.write(",")
-                                print ",",
-                            f.write(self.artIndex.index(lj[i].string.strip()).__str__())
-                            print lj[i].ruleNum,":",lj[i].string,
-                        f.write("]\n")
-                        print "]"
-                        print "************************************"
-                        self.fixedCnt += 1
-                    else:
-                        lj = list(j)
-                        print "************************************"
-                        f.write("MIS "+str(self.fixedCnt)+": [",)
-                        print "Min inconsistent subset ",self.fixedCnt,": [",
-                        for i in range(len(lj)):
-                            if i != 0:
-                                f.write(",")
-                                print ",",
-                            f.write(self.shawnarticulations.index(lj[i].strip()).__str__())
-                            print lj[i],
-                        f.write("]\n")
-                        print "]"
-                        print "************************************"
-                        self.fixedCnt += 1
+                #if not reasoner[self.args['-r']] == reasoner["rcc1"]:
+                lj = list(j)
+                print "************************************"
+                f.write("MIS "+str(self.fixedCnt)+": [",)
+                print "Min inconsistent subset ",self.fixedCnt,": [",
+                for i in range(len(lj)):
+                    if i != 0:
+                        f.write(",")
+                        print ",",
+                    f.write(self.artIndex.index(lj[i].string.strip()).__str__())
+                    print lj[i].ruleNum,":",lj[i].string,
+                f.write("]\n")
+                print "]"
+                print "************************************"
+                self.fixedCnt += 1
+                '''
+                else:
+                    lj = list(j)
+                    print "************************************"
+                    f.write("MIS "+str(self.fixedCnt)+": [",)
+                    print "Min inconsistent subset ",self.fixedCnt,": [",
+                    for i in range(len(lj)):
+                        if i != 0:
+                            f.write(",")
+                            print ",",
+                        f.write(self.shawnarticulations.index(lj[i].strip()).__str__())
+                        print lj[i],
+                    f.write("]\n")
+                    print "]"
+                    print "************************************"
+                    self.fixedCnt += 1
+                    '''
+                '''
                 # Ambiguity output
                 elif flag == 'Ambiguity':
                     # output mas
@@ -1380,10 +1389,11 @@ class TaxonomyMapping:
     #                         if tmplist not in self.misANDmus:
     #                             self.misANDmus.append(tmplist)
     #                         
-                        f.write("]\n")
-                        print "]"
-                        print "************************************"
-                        self.fixedCnt += 1
+        
+                    f.write("]\n")
+                    print "]"
+                    print "************************************"
+                    self.fixedCnt += 1 
                     else:
                         lj = list(j)
                         print "************************************"
@@ -1605,12 +1615,15 @@ class TaxonomyMapping:
 
             
     def checkFourinone(self, artSet):
+        return
+        '''
         if not self.diagnosisAskOracle(artSet, 'Consistency'):
             return 'inconsistent'
         elif not self.diagnosisAskOracle(artSet, 'Ambiguity'):
             return 'unique'
         else:
             return 'ambiguous'
+            '''
         
 #         tmpart1 = copy.copy(self.articulations)
 #         tmpmir = copy.deepcopy(self.mir)
