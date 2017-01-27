@@ -1332,6 +1332,7 @@ class TaxonomyMapping:
                     # output mis
                 #if not reasoner[self.args['-r']] == reasoner["rcc1"]:
                 lj = list(j)
+                print lj
                 print "************************************"
                 f.write("MIS "+str(self.fixedCnt)+": [",)
                 print "Min inconsistent subset ",self.fixedCnt,": [",
@@ -1339,7 +1340,8 @@ class TaxonomyMapping:
                     if i != 0:
                         f.write(",")
                         print ",",
-                    f.write(self.artIndex.index(lj[i].string.strip()).__str__())
+                    f.write(self.artIndex.index(lj[i].strip()).__str__())
+                    #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
                     print lj[i].ruleNum,":",lj[i].string,
                 f.write("]\n")
                 print "]"
