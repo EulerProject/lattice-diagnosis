@@ -8,5 +8,5 @@ import gcd
 
 tax = alignment2.TaxonomyMapping([])
 
-tax.allJustifications(['24','54','12','5'],gcd.gcd)
+tax.allJustifications([24,54,12,5],gcd.has_common_prime)
 

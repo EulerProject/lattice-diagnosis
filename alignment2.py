@@ -79,7 +79,9 @@ class TaxonomyMapping:
         self.eq = {}                           # euqlities
         self.rules = {}
         self.taxonomies = {}                   # set of taxonomies
+        '''
         self.articulations = []                # set of articulations
+        '''
         self.map = {}                          # mapping between the concept name and its numbering
         self.baseAsp = ""                      # tmp string for the ASP input file
         self.baseCb = ""                       # tmp string for the combined concept ASP input file
@@ -611,6 +613,7 @@ class TaxonomyMapping:
         print rs
         artSet = self.getArtSetFromN(rs)
         self.allJustifications(artSet, "Consistency")
+        '''
 
     def getArtSetFromN(self, rs):
         artSet = sets.Set()
@@ -618,6 +621,7 @@ class TaxonomyMapping:
             if self.articulations[i].ruleNum.__str__() in rs:
                 artSet.add(self.articulations[i])
         return artSet
+    '''
 
     def outGringoPW(self):
         raw = self.pw.split("\n")
@@ -1310,12 +1314,12 @@ class TaxonomyMapping:
         for path in allpaths:
             if path.issubset(curpath):
                 return
-            '''
+        
         # ask oracle question
         if self.diagnosisAskOracle(artSet, flag):
             allpaths.add(curpath)
             return
-        '''                     
+                            
         # prepare the justification set
         j = sets.Set()
         for s in justSet:
@@ -1332,21 +1336,23 @@ class TaxonomyMapping:
                     # output mis
                 #if not reasoner[self.args['-r']] == reasoner["rcc1"]:
                 lj = list(j)
-                print lj
-                print "************************************"
-                f.write("MIS "+str(self.fixedCnt)+": [",)
-                print "Min inconsistent subset ",self.fixedCnt,": [",
-                for i in range(len(lj)):
-                    if i != 0:
-                        f.write(",")
-                        print ",",
-                    f.write(self.artIndex.index(lj[i].strip()).__str__())
-                    #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
-                    print lj[i].ruleNum,":",lj[i].string,
-                f.write("]\n")
-                print "]"
-                print "************************************"
-                self.fixedCnt += 1
+                if len(lj) > 1:
+                    #print "************************************"
+                    f.write("MIS "+str(self.fixedCnt)+": [",)
+                    print "Min inconsistent subset ",self.fixedCnt,": [",
+                    for i in range(len(lj)):
+                        if i != 0:
+                            f.write(",")
+                            print ",",
+                            print lj
+                        # Parisa: Temp change
+                        #f.write(self.artIndex.index(lj[i].strip()).__str__())
+                        #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
+                        #print lj[i].ruleNum,":",lj[i].string,
+                    f.write("]\n")
+                    print "]"
+                    print "************************************"
+                    self.fixedCnt += 1
                 '''
                 else:
                     lj = list(j)
@@ -1414,7 +1420,8 @@ class TaxonomyMapping:
         '''
         # update justification set
         if len(j) != 0:
-            justSet.add(j)
+            justSet.add(frozenset(j))
+            # justSet.add(j)
         for a in j:
             tmpcur = copy.copy(curpath)
             tmpcur.add(a)
