@@ -1337,18 +1337,21 @@ class TaxonomyMapping:
                 #if not reasoner[self.args['-r']] == reasoner["rcc1"]:
                 lj = list(j)
                 if len(lj) > 1:
-                    #print "************************************"
+                    print "************************************"
                     f.write("MIS "+str(self.fixedCnt)+": [",)
                     print "Min inconsistent subset ",self.fixedCnt,": [",
-                    for i in range(len(lj)):
-                        if i != 0:
-                            f.write(",")
-                            print ",",
-                            print lj
+                    for i in range(len(lj)-1):
+                        print lj[i],
+                        f.write(",")
+                        print ",",
                         # Parisa: Temp change
+                        f.write(str(lj[i]))
                         #f.write(self.artIndex.index(lj[i].strip()).__str__())
                         #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
                         #print lj[i].ruleNum,":",lj[i].string,
+                    print lj[-1],
+                    f.write(str(lj[-1]))
+
                     f.write("]\n")
                     print "]"
                     print "************************************"
