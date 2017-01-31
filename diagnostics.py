@@ -32,7 +32,7 @@ class lattice:
 
     def __init__(self, args):
         self.fixedCnt = 0                      # # of fixes /repairs
-
+        self.internalfile = open("MIS.txt","w+")  # prepare internal file
     def allJustifications(self, artSet, diagnosisOracle):
         s = sets.Set()
         curpath = sets.Set()
@@ -40,7 +40,7 @@ class lattice:
         self.computeAllJust(artSet, s, curpath, allpaths, diagnosisOracle)
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, diagnosisOracle):
-        f = open("MIS.txt","a")
+        f = self.internalfile
 
         # prepare cashed path
         for path in allpaths:
