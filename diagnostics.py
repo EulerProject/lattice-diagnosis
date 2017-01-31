@@ -73,25 +73,19 @@ class lattice:
             if len(j) != 0:
                 lj = list(j)
                 if len(lj) > 1:
-                    print "************************************"
-                    f.write("MIS "+str(self.fixedCnt)+": [",)
-                    print "Min inconsistent subset ",self.fixedCnt,": [",
-                    for i in range(len(lj)-1):
-                        print lj[i],
-                        f.write(",")
-                        print ",",
-                        # Parisa: Temp change
-                        f.write(str(lj[i]))
-                        #f.write(self.artIndex.index(lj[i].strip()).__str__())
-                        #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
-                        #print lj[i].ruleNum,":",lj[i].string,
-                    print lj[-1],
-                    f.write(str(lj[-1]))
-
-                    f.write("]\n")
-                    print "]"
-                    print "************************************"
-                    self.fixedCnt += 1
+                        f.write("MIS "+str(self.fixedCnt)+": [",)
+                        print "Min inconsistent subset ",self.fixedCnt,": [",
+                        for i in range(len(lj)):
+                            if i != 0:
+                                f.write(",")
+                                print ",",
+                            f.write(str(lj[i]))
+                            #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
+                            print lj[i],
+                        f.write("]\n")
+                        print "]"
+                        print "************************************"
+                        self.fixedCnt += 1
         # update justification set
         if len(j) != 0:
             justSet.add(frozenset(j))
@@ -102,7 +96,6 @@ class lattice:
             tmpart = copy.copy(artSet)
             tmpart.remove(a)
             self.computeAllJust(tmpart, justSet, tmpcur, allpaths, flag)
-        
 
     def computeOneJust(self, artSet, flag):
         if flag(artSet):
