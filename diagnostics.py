@@ -33,13 +33,13 @@ class lattice:
     def __init__(self, args):
         self.fixedCnt = 0                      # # of fixes /repairs
 
-    def allJustifications(self, artSet, flag):
+    def allJustifications(self, artSet, diagnosisOracle):
         s = sets.Set()
         curpath = sets.Set()
         allpaths = sets.Set()
-        self.computeAllJust(artSet, s, curpath, allpaths, flag)
+        self.computeAllJust(artSet, s, curpath, allpaths, diagnosisOracle)
         
-    def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
+    def computeAllJust(self, artSet, justSet, curpath, allpaths, diagnosisOracle):
         f = open("MIS.txt","a")
 
         # prepare cashed path
@@ -48,7 +48,7 @@ class lattice:
                 return
         
         # ask oracle question
-        if flag(artSet):
+        if diagnosisOracle(artSet):
             allpaths.add(curpath)
             return
                             
@@ -60,7 +60,7 @@ class lattice:
                 
         # check the justification set
         if len(j) == 0:
-            j = self.computeOneJust(artSet, flag)
+            j = self.computeOneJust(artSet, diagnosisOracle)
             if len(j) != 0:
                 lj = list(j)
                 f.write("MIS "+str(self.fixedCnt)+": [",)
@@ -85,26 +85,26 @@ class lattice:
             tmpcur.add(a)
             tmpart = copy.copy(artSet)
             tmpart.remove(a)
-            self.computeAllJust(tmpart, justSet, tmpcur, allpaths, flag)
+            self.computeAllJust(tmpart, justSet, tmpcur, allpaths, diagnosisOracle)
 
-    def computeOneJust(self, artSet, flag):
-        if flag(artSet):
+    def computeOneJust(self, artSet, diagnosisOracle):
+        if diagnosisOracle(artSet):
             return sets.Set()
-        return self.computeJust(sets.Set(), artSet, flag)
+        return self.computeJust(sets.Set(), artSet, diagnosisOracle)
 
     # s is consistent, f is inconsistent
-    def computeJust(self, s, f, flag):
+    def computeJust(self, s, f, diagnosisOracle):
         if len(f) <= 1:
             return f
         f1 = copy.copy(f)
         f2 = sets.Set()
         for i in range(len(f) /2):
             f2.add(f1.pop())
-        if not flag(s.union(f1)):
-            return self.computeJust(s, f1, flag)
-        if not flag(s.union(f2)):
-            return self.computeJust(s, f2, flag)
-        sl = self.computeJust(s.union(f1), f2, flag)
-        sr = self.computeJust(s.union(sl), f1, flag)
+        if not diagnosisOracle(s.union(f1)):
+            return self.computeJust(s, f1, diagnosisOracle)
+        if not diagnosisOracle(s.union(f2)):
+            return self.computeJust(s, f2, diagnosisOracle)
+        sl = self.computeJust(s.union(f1), f2, diagnosisOracle)
+        sr = self.computeJust(s.union(sl), f1, diagnosisOracle)
         return sl.union(sr)                   
         
