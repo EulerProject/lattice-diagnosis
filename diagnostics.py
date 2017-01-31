@@ -24,17 +24,9 @@
 #       diagnostics.py
 #
 
-
-
-import os
 import sets
-import itertools
 import string
-import sys
 import copy
-from operator import itemgetter
-from shutil import copyfile
-
 
 class lattice:
 
@@ -48,7 +40,6 @@ class lattice:
         self.computeAllJust(artSet, s, curpath, allpaths, flag)
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
-        #f = open(self.misinternalfiles, "a")
         f = open("MIS.txt","a")
 
         # prepare cashed path
@@ -84,6 +75,7 @@ class lattice:
                 print "]"
                 print "************************************"
                 self.fixedCnt += 1
+                
         # update justification set
         if len(j) != 0:
             justSet.add(frozenset(j))
