@@ -49,7 +49,7 @@ class lattice:
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
         #f = open(self.misinternalfiles, "a")
-        f = open("MIS.txt","w")
+        f = open("MIS.txt","a")
 
         # prepare cashed path
         for path in allpaths:
@@ -72,20 +72,18 @@ class lattice:
             j = self.computeOneJust(artSet, flag)
             if len(j) != 0:
                 lj = list(j)
-                if len(lj) > 1:
-                        f.write("MIS "+str(self.fixedCnt)+": [",)
-                        print "Min inconsistent subset ",self.fixedCnt,": [",
-                        for i in range(len(lj)):
-                            if i != 0:
-                                f.write(",")
-                                print ",",
-                            f.write(str(lj[i]))
-                            #f.write(self.artIndex.index(lj[i].string.strip()).__str__())
-                            print lj[i],
-                        f.write("]\n")
-                        print "]"
-                        print "************************************"
-                        self.fixedCnt += 1
+                f.write("MIS "+str(self.fixedCnt)+": [",)
+                print "Min inconsistent subset ",self.fixedCnt,": [",
+                for i in range(len(lj)):
+                    if i != 0:
+                        f.write(",")
+                        print ",",
+                    f.write(str(lj[i]))
+                    print lj[i],
+                f.write("]\n")
+                print "]"
+                print "************************************"
+                self.fixedCnt += 1
         # update justification set
         if len(j) != 0:
             justSet.add(frozenset(j))
