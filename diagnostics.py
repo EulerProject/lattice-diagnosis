@@ -21,12 +21,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #
-#       alignment.py
+#       diagnostics.py
 #
-#  Alignment Module:
-#    We define the alignment class here for taxonomy alignment
-#    and dataset integration
-#
+
 
 
 import os
@@ -39,17 +36,10 @@ from operator import itemgetter
 from shutil import copyfile
 
 
-class diagnostic:
+class lattice:
 
     def __init__(self, args):
-        self.articulations = []                # set of articulations
         self.fixedCnt = 0                      # # of fixes /repairs
-        self.artIndex = []                     # articulations string with index
-
-    # return consistent or ambiguous
-    def diagnosisAskOracle(self, artSet, flag):
-        return flag(artSet)
-            
 
     def allJustifications(self, artSet, flag):
         s = sets.Set()
@@ -58,18 +48,16 @@ class diagnostic:
         self.computeAllJust(artSet, s, curpath, allpaths, flag)
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, flag):
-        # prepare the internal files
         #f = open(self.misinternalfiles, "a")
         f = open("MIS.txt","w")
 
-        
         # prepare cashed path
         for path in allpaths:
             if path.issubset(curpath):
                 return
         
         # ask oracle question
-        if self.diagnosisAskOracle(artSet, flag):
+        if flag(artSet):
             allpaths.add(curpath)
             return
                             
@@ -117,7 +105,7 @@ class diagnostic:
         
 
     def computeOneJust(self, artSet, flag):
-        if self.diagnosisAskOracle(artSet, flag):
+        if flag(artSet):
             return sets.Set()
         return self.computeJust(sets.Set(), artSet, flag)
 
@@ -129,9 +117,9 @@ class diagnostic:
         f2 = sets.Set()
         for i in range(len(f) /2):
             f2.add(f1.pop())
-        if not self.diagnosisAskOracle(s.union(f1), flag):
+        if not flag(s.union(f1)):
             return self.computeJust(s, f1, flag)
-        if not self.diagnosisAskOracle(s.union(f2), flag):
+        if not flag(s.union(f2)):
             return self.computeJust(s, f2, flag)
         sl = self.computeJust(s.union(f1), f2, flag)
         sr = self.computeJust(s.union(sl), f1, flag)
