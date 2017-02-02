@@ -31,7 +31,7 @@ import re
 class DiagnosticLattice:
     
     def __init__(self, MISFile):
-        self.inputFile = 'lat.txt'
+        self.inputFile = 'in.txt'
         self.art = []
         self.allMCS = set()
         self.otherRed = set()
@@ -41,7 +41,6 @@ class DiagnosticLattice:
         self.edgesBin = []
         self.latVizNodes = {}
         self.latVizEdges = {}
-
         allMIS = set()
         fMIS = open(MISFile, "r")
         lines = fMIS.readlines()
@@ -74,11 +73,10 @@ class DiagnosticLattice:
         numOfNodes = 2**numOfArts
         nodes = []
         edges = []
-        
         for i in range(numOfNodes):
             nodes.append(i)
             self.nodesBin.add(self.turnBin(i, numOfArts))
-            
+          
         for i in nodes:
             for j in nodes:
                 if i<j and self.isPower2(i^j):
@@ -86,7 +84,6 @@ class DiagnosticLattice:
         
         for edge in edges:
             self.edgesBin.append([self.turnBin(edge[0], numOfNodes), self.turnBin(edge[1], numOfNodes)])
-
     def eliminate_subsets(self, sequence_of_sets):
         """Return a list of the elements of `sequence_of_sets`, removing all
         elements that are subsets of other elements.  Assumes that each
@@ -133,20 +130,16 @@ class DiagnosticLattice:
         f = open(self.inputFile, 'r')
         lines = f.readlines()
         for line in lines:
-            if (re.match("\[.*?\]", line)):
-                self.art.append(re.match("\[(.*)\]", line).group(1))
+                self.art.append(line.strip())
         f.close()
-        self.createUncoloredLat(len(self.art))
-        
+        self.createUncoloredLat(len(self.art)) 
         # find other red or green nodes
         for aMIS in self.allMIS:
             supSets = self.findSupSets(aMIS, self.nodesBin)
             self.otherRed.update(supSets)
-         
         self.allGreen = self.nodesBin.difference(self.otherRed).difference(self.allMIS)        
         self.allMCS = set(self.eliminate_subsets(self.allGreen))
         self.otherGreen = self.allGreen.difference(self.allMCS)
-    
     # generate the full lattice
     def fullLatViz(self):
         outstr = ""
@@ -202,7 +195,7 @@ class DiagnosticLattice:
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
                 outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid]\n'
-                
+        '''             
         # add legend
         artsLabels = ""
         for art in self.art:
@@ -211,11 +204,13 @@ class DiagnosticLattice:
         outstr += '{rank=top Legend [label=< \n <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2"> \n'
         outstr += artsLabels
         outstr += "</TABLE> \n >] } \n"
-        outstr += 'Legend -> "None" [style=invis]\n'   
+        outstr += 'Legend -> "None" [style=invis]\n'
+        '''
         outstr += "}"
         return outstr
     
     def reducedLatViz(self):
+        self.genLattice()
         outstr = ""
         outstr += "digraph{\n"
         outstr += "rankdir=BT\n"
@@ -237,7 +232,6 @@ class DiagnosticLattice:
             else:
                 label = ','.join(str(s+1) for s in solidGreen)
                 outstr += '"' + label +'"\n'
-                
         # add edges
         outstr += '\nedge[style=dotted penwidth=0.4]\n\n'
         if len(self.otherRed) > 0:
@@ -271,7 +265,7 @@ class DiagnosticLattice:
                 start = ','.join(str(s+1) for s in mcs)
                 end = 'AllOtherRed'
                 outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid label='+str(len(self.art)-len(mcs))+']\n'
-        
+        '''
         # add legend
         artsLabels = ""
         for art in self.art:
@@ -284,7 +278,8 @@ class DiagnosticLattice:
             outstr += 'Legend -> "AllOtherGreen" [style=invis]\n'
         else:
             outstr += 'Legend -> "None" [style=invis]\n'
+        '''
         outstr += "}"
         return outstr
     
- 
+
