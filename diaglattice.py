@@ -142,6 +142,7 @@ class DiagnosticLattice:
         self.otherGreen = self.allGreen.difference(self.allMCS)
     # generate the full lattice
     def fullLatViz(self):
+        self.genLattice()
         outstr = ""
         outstr += "digraph{\n"
         outstr += "rankdir=BT\n"
@@ -153,14 +154,20 @@ class DiagnosticLattice:
             label = ','.join(str(s+1) for s in solidRed)
             outstr += '"' + label +'"\n'
         outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=solid penwidth=0.4]\n'
+        print self.otherRed
+        print "=="
         for otherRed in self.otherRed:
             label = ','.join(str(s+1) for s in otherRed)
             outstr += '"' + label +'"\n'
         outstr += 'node[shape=box color="#006400" fillcolor="#A0FFA0" style="rounded,filled"]\n'
+        print "--"
+        print self.allMCS
+
         for solidGreen in self.allMCS:
             if len(solidGreen) == 0:
                 outstr += '"None"\n'
             else:
+                print solidGreen
                 label = ','.join(str(s+1) for s in solidGreen)
                 outstr += '"' + label +'"\n'
         outstr += 'node[shape=box color="#006400" style=rounded penwidth=0.4]\n'
@@ -195,7 +202,6 @@ class DiagnosticLattice:
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
                 outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid]\n'
-        '''             
         # add legend
         artsLabels = ""
         for art in self.art:
@@ -205,7 +211,6 @@ class DiagnosticLattice:
         outstr += artsLabels
         outstr += "</TABLE> \n >] } \n"
         outstr += 'Legend -> "None" [style=invis]\n'
-        '''
         outstr += "}"
         return outstr
     
