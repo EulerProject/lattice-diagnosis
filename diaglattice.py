@@ -154,20 +154,14 @@ class DiagnosticLattice:
             label = ','.join(str(s+1) for s in solidRed)
             outstr += '"' + label +'"\n'
         outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=solid penwidth=0.4]\n'
-        print self.otherRed
-        print "=="
         for otherRed in self.otherRed:
             label = ','.join(str(s+1) for s in otherRed)
             outstr += '"' + label +'"\n'
         outstr += 'node[shape=box color="#006400" fillcolor="#A0FFA0" style="rounded,filled"]\n'
-        print "--"
-        print self.allMCS
-
         for solidGreen in self.allMCS:
             if len(solidGreen) == 0:
                 outstr += '"None"\n'
             else:
-                print solidGreen
                 label = ','.join(str(s+1) for s in solidGreen)
                 outstr += '"' + label +'"\n'
         outstr += 'node[shape=box color="#006400" style=rounded penwidth=0.4]\n'
