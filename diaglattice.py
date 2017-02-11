@@ -33,6 +33,13 @@ class DiagnosticLattice:
     def __init__(self, MISFile):
         self.inputFile = 'in.txt'
         self.art = []
+        # get articulations from input
+        f = open(self.inputFile, 'r')
+        lines = f.readlines()
+        for line in lines:
+                self.art.append(line.strip())
+        f.close()
+        self.art = map(int, self.art)
         self.allMCS = set()
         self.otherRed = set()
         self.allGreen = set()
@@ -46,7 +53,11 @@ class DiagnosticLattice:
         lines = fMIS.readlines()
         for line in lines:
             aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(",")
-            aMIS = frozenset(map(int, aMISString))
+            aMISString = list(map(int, aMISString))
+            nMISString = []
+            for a in aMISString:
+                nMISString.append(self.art.index(a))
+            aMIS = frozenset(map(int, nMISString))
             allMIS.add(aMIS)
         fMIS.close()
         self.allMIS = allMIS
@@ -73,10 +84,9 @@ class DiagnosticLattice:
         numOfNodes = 2**numOfArts
         nodes = []
         edges = []
-        for i in range(numOfNodes):
+        for i in range(1,numOfNodes):
             nodes.append(i)
             self.nodesBin.add(self.turnBin(i, numOfArts))
-          
         for i in nodes:
             for j in nodes:
                 if i<j and self.isPower2(i^j):
@@ -126,12 +136,6 @@ class DiagnosticLattice:
 #         self.latVizEdges.update({s + "_" + t : edge})    
     
     def genLattice(self):
-        # get articulations from input
-        f = open(self.inputFile, 'r')
-        lines = f.readlines()
-        for line in lines:
-                self.art.append(line.strip())
-        f.close()
         self.createUncoloredLat(len(self.art)) 
         # find other red or green nodes
         for aMIS in self.allMIS:
@@ -143,6 +147,7 @@ class DiagnosticLattice:
     # generate the full lattice
     def fullLatViz(self):
         self.genLattice()
+        self.art = map(str, self.art)
         outstr = ""
         outstr += "digraph{\n"
         outstr += "rankdir=BT\n"
