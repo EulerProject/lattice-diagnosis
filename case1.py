@@ -11,8 +11,9 @@ tax = diagnostics.lattice([])
 
 tax.allJustifications([24,54,12,5,9,17],gcd.has_common_prime)
 lat = diaglattice.DiagnosticLattice('MIS.txt')
+lat.genLattice()
 
-
-out = lat.fullLatViz()
-f = open('out.dot', 'w+')
-f.write(out)
+f = open('out.dot', 'w')
+fullLatStr = lat.fullLatViz()
+f.write(fullLatStr)
+f.close()

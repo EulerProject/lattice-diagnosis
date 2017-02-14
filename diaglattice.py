@@ -146,7 +146,7 @@ class DiagnosticLattice:
         self.otherGreen = self.allGreen.difference(self.allMCS)
     # generate the full lattice
     def fullLatViz(self):
-        self.genLattice()
+        #self.genLattice()
         self.art = map(str, self.art)
         outstr = ""
         outstr += "digraph{\n"
