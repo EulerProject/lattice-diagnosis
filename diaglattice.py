@@ -209,7 +209,7 @@ class DiagnosticLattice:
         outstr += '{rank=top Legend [label=< \n <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2"> \n'
         outstr += artsLabels
         outstr += "</TABLE> \n >] } \n"
-        outstr += 'Legend -> "None" [style=invis]\n'
+        #outstr += 'Legend -> "None" [style=invis]\n'
         outstr += "}"
         return outstr
     
