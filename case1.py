@@ -6,10 +6,14 @@ import gcd
 
 #  Cosistency in this example is defined as having a common prime factor
 #  Given an inconsistent set of numbers, we are using the diagnostics approach to find the minium inconsistent subset
-
+inputRules = list()
 tax = diagnostics.lattice([])
 
-tax.allJustifications([24,54,12,5,9,17],gcd.has_common_prime)
+inputFile = open('in.txt', 'r')
+lines = inputFile.readlines()
+for line in lines:
+    inputRules.append(line)
+tax.allJustifications([24,2,4,45],gcd.has_common_prime)
 lat = diaglattice.DiagnosticLattice('MIS.txt')
 lat.genLattice()
 
