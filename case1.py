@@ -17,7 +17,12 @@ tax.allJustifications(map(int, inputRules),gcd.has_common_prime)
 lat = diaglattice.DiagnosticLattice('MIS.txt')
 lat.genLattice()
 
-f = open('out.dot', 'w')
+f = open('fullLattice.dot', 'w')
 fullLatStr = lat.fullLatViz()
 f.write(fullLatStr)
+f.close()
+
+f = open('reducedLattice.dot', 'w')
+reducedLatStr = lat.reducedLatViz()
+f.write(reducedLatStr)
 f.close()
