@@ -84,7 +84,7 @@ class DiagnosticLattice:
         numOfNodes = 2**numOfArts
         nodes = []
         edges = []
-        for i in range(1,numOfNodes):
+        for i in range(numOfNodes):
             nodes.append(i)
             self.nodesBin.add(self.turnBin(i, numOfArts))
         for i in nodes:
@@ -121,19 +121,7 @@ class DiagnosticLattice:
                if s and self.isPower2(reduce(
                    operator.and_, (sets_containing_element[x] for x in s)))]
         return out
-    
-#     def addLatVizNode(self, concept, group):
-#         node = {}
-#         node.update({"concept": concept})
-#         node.update({"group": group})
-#         self.latVizNodes.update({concept: node})
-#     
-#     def addLatVizEdge(self, s, t, label):
-#         edge = {}
-#         edge.update({"s" : s})
-#         edge.update({"t" : t})
-#         edge.update({"label" : label})
-#         self.latVizEdges.update({s + "_" + t : edge})    
+       
     
     def genLattice(self):
         self.createUncoloredLat(len(self.art)) 
@@ -180,6 +168,7 @@ class DiagnosticLattice:
         # add edges
         outstr += '\nedge[style=dotted penwidth=0.4]\n\n'
         for edge in self.edgesBin:
+            # red dotted eddges
             if (edge[0] in self.allMIS or edge[0] in self.otherRed) \
                 and (edge[1] in self.allMIS or edge[1] in self.otherRed):
                 start = ','.join(str(s+1) for s in edge[0])
@@ -190,6 +179,7 @@ class DiagnosticLattice:
                 if len(edge[0]) == 0:
                     start = 'None'
                 else:
+                # green dotted edges
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
                 outstr += '"' + start + '" -> "' + end +'" [dir=back color="#006400"]\n'
@@ -209,7 +199,7 @@ class DiagnosticLattice:
         outstr += '{rank=top Legend [label=< \n <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2"> \n'
         outstr += artsLabels
         outstr += "</TABLE> \n >] } \n"
-        #outstr += 'Legend -> "None" [style=invis]\n'
+        outstr += 'Legend -> "None" [style=invis]\n'
         outstr += "}"
         return outstr
     

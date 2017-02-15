@@ -13,7 +13,7 @@ inputFile = open('in.txt', 'r')
 lines = inputFile.readlines()
 for line in lines:
     inputRules.append(line)
-tax.allJustifications([24,2,4,45],gcd.has_common_prime)
+tax.allJustifications(map(int, inputRules),gcd.has_common_prime)
 lat = diaglattice.DiagnosticLattice('MIS.txt')
 lat.genLattice()
 
