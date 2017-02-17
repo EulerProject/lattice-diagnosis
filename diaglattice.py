@@ -190,7 +190,7 @@ class DiagnosticLattice:
                 else:
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid]\n'
+                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="##A9A9A9" penwidth=2 style=solid]\n'
         # add legend
         artsLabels = ""
         for art in self.art:
