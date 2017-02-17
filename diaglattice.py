@@ -190,7 +190,7 @@ class DiagnosticLattice:
                 else:
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="##A9A9A9" penwidth=2 style=solid]\n'
+                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'
         # add legend
         artsLabels = ""
         for art in self.art:
@@ -248,17 +248,17 @@ class DiagnosticLattice:
                 else:
                     start = ','.join(str(s+1) for s in edge[0])
                 end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid]\n'
+                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'
         if len(self.otherGreen) > 0:
             for mis in self.allMIS:
                 start = 'AllOtherGreen'
                 end = ','.join(str(s+1) for s in mis)
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid label='+str(len(mis))+']\n'
+                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid label='+str(len(mis))+']\n'
         if len(self.otherRed) > 0:
             for mcs in self.allMCS:
                 start = ','.join(str(s+1) for s in mcs)
                 end = 'AllOtherRed'
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#0000FF" penwidth=2 style=solid label='+str(len(self.art)-len(mcs))+']\n'
+                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid label='+str(len(self.art)-len(mcs))+']\n'
         '''
         # add legend
         artsLabels = ""
