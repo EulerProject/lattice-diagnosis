@@ -30,9 +30,10 @@ import re
 
 class DiagnosticLattice:
     
-    def __init__(self, MISFile):
+    def __init__(self, MISFile, legend = True):
         self.inputFile = 'in.txt'
         self.art = []
+        self. legend = legend
         # get articulations from input
         f = open(self.inputFile, 'r')
         lines = f.readlines()
@@ -91,7 +92,6 @@ class DiagnosticLattice:
             for j in nodes:
                 if i<j and self.isPower2(i^j):
                     edges.append([i,j])
-        
         for edge in edges:
             self.edgesBin.append([self.turnBin(edge[0], numOfNodes), self.turnBin(edge[1], numOfNodes)])
     def eliminate_subsets(self, sequence_of_sets):
@@ -136,70 +136,123 @@ class DiagnosticLattice:
     def fullLatViz(self):
         #self.genLattice()
         self.art = map(str, self.art)
+        artMap = {k+1: v for k, v in enumerate(self.art)}
         outstr = ""
         outstr += "digraph{\n"
         outstr += "rankdir=BT\n"
         outstr += 'node[fontname="Helvetica"]\n\n'
-        
-        # add nodes
-        outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=filled]\n'
-        for solidRed in self.allMIS:
-            label = ','.join(str(s+1) for s in solidRed)
-            outstr += '"' + label +'"\n'
-        outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=solid penwidth=0.4]\n'
-        for otherRed in self.otherRed:
-            label = ','.join(str(s+1) for s in otherRed)
-            outstr += '"' + label +'"\n'
-        outstr += 'node[shape=box color="#006400" fillcolor="#A0FFA0" style="rounded,filled"]\n'
-        for solidGreen in self.allMCS:
-            if len(solidGreen) == 0:
-                outstr += '"None"\n'
-            else:
-                label = ','.join(str(s+1) for s in solidGreen)
+        if self.legend:
+            # add nodes
+            outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=filled]\n'
+            for solidRed in self.allMIS:
+                label = ','.join(str(s+1) for s in solidRed)
                 outstr += '"' + label +'"\n'
-        outstr += 'node[shape=box color="#006400" style=rounded penwidth=0.4]\n'
-        for otherGreen in self.otherGreen:
-            if len(otherGreen) == 0:
-                outstr += '"None"\n'
-            else:
-                label = ','.join(str(s+1) for s in otherGreen)
+            outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=solid penwidth=0.4]\n'
+            for otherRed in self.otherRed:
+                label = ','.join(str(s+1) for s in otherRed)
                 outstr += '"' + label +'"\n'
-        
-        # add edges
-        outstr += '\nedge[style=dotted penwidth=0.4]\n\n'
-        for edge in self.edgesBin:
-            # red dotted eddges
-            if (edge[0] in self.allMIS or edge[0] in self.otherRed) \
-                and (edge[1] in self.allMIS or edge[1] in self.otherRed):
-                start = ','.join(str(s+1) for s in edge[0])
-                end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [color="#CC0000"]\n'
-            if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
-                and (edge[1] in self.allMCS or edge[1] in self.otherGreen):
-                if len(edge[0]) == 0:
-                    start = 'None'
+            outstr += 'node[shape=box color="#006400" fillcolor="#A0FFA0" style="rounded,filled"]\n'
+            for solidGreen in self.allMCS:
+                if len(solidGreen) == 0:
+                    outstr += '"None"\n'
                 else:
-                # green dotted edges
-                    start = ','.join(str(s+1) for s in edge[0])
-                end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [dir=back color="#006400"]\n'
-            if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
-                and (edge[1] in self.allMIS or edge[1] in self.otherRed):
-                if len(edge[0]) == 0:
-                    start = 'None'
+                    label = ','.join(str(s+1) for s in solidGreen)
+                    outstr += '"' + label +'"\n'
+            outstr += 'node[shape=box color="#006400" style=rounded penwidth=0.4]\n'
+            for otherGreen in self.otherGreen:
+                if len(otherGreen) == 0:
+                    outstr += '"None"\n'
                 else:
+                    label = ','.join(str(s+1) for s in otherGreen)
+                    outstr += '"' + label +'"\n'
+            
+            # add edges
+            outstr += '\nedge[style=dotted penwidth=0.4]\n\n'
+            for edge in self.edgesBin:
+                # red dotted eddges
+                if (edge[0] in self.allMIS or edge[0] in self.otherRed) \
+                    and (edge[1] in self.allMIS or edge[1] in self.otherRed):
                     start = ','.join(str(s+1) for s in edge[0])
-                end = ','.join(str(s+1) for s in edge[1])
-                outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'
-        # add legend
-        artsLabels = ""
-        for art in self.art:
-            artsLabels += "<TR> \n <TD>" + str(self.art.index(art)+1) + "</TD> \n <TD>" + art + "</TD> \n </TR> \n"
-        outstr += "node[shape=plaintext fontsize=12 color=black] \n"
-        outstr += '{rank=top Legend [label=< \n <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2"> \n'
-        outstr += artsLabels
-        outstr += "</TABLE> \n >] } \n"
-        outstr += 'Legend -> "None" [style=invis]\n'
+                    end = ','.join(str(s+1) for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [color="#CC0000"]\n'
+                if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
+                    and (edge[1] in self.allMCS or edge[1] in self.otherGreen):
+                    if len(edge[0]) == 0:
+                        start = 'None'
+                    else:
+                    # green dotted edges
+                        start = ','.join(str(s+1) for s in edge[0])
+                    end = ','.join(str(s+1) for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [dir=back color="#006400"]\n'
+                if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
+                    and (edge[1] in self.allMIS or edge[1] in self.otherRed):
+                    if len(edge[0]) == 0:
+                        start = 'None'
+                    else:
+                        start = ','.join(str(s+1) for s in edge[0])
+                    end = ','.join(str(s+1) for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'
+            # add legend
+            artsLabels = ""
+            for art in self.art:
+                artsLabels += "<TR> \n <TD>" + str(self.art.index(art)+1) + "</TD> \n <TD>" + art + "</TD> \n </TR> \n"
+            outstr += "node[shape=plaintext fontsize=12 color=black] \n"
+            outstr += '{rank=top Legend [label=< \n <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="2"> \n'
+            outstr += artsLabels
+            outstr += "</TABLE> \n >] } \n"
+            outstr += 'Legend -> "None" [style=invis]\n'
+
+        else:
+            # add nodes
+            outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=filled]\n'
+            for solidRed in self.allMIS:
+                label = ','.join(artMap[s+1] for s in solidRed)
+                outstr += '"' + label +'"\n'
+            outstr += 'node[shape=octagon color="#FF0000" fillcolor="#FFB0B0" style=solid penwidth=0.4]\n'
+            for otherRed in self.otherRed:
+                label = ','.join(artMap[s+1] for s in otherRed)
+                outstr += '"' + label +'"\n'
+            outstr += 'node[shape=box color="#006400" fillcolor="#A0FFA0" style="rounded,filled"]\n'
+            for solidGreen in self.allMCS:
+                if len(solidGreen) == 0:
+                    outstr += '"None"\n'
+                else:
+                    label = ','.join(artMap[s+1] for s in solidGreen)
+                    outstr += '"' + label +'"\n'
+            outstr += 'node[shape=box color="#006400" style=rounded penwidth=0.4]\n'
+            for otherGreen in self.otherGreen:
+                if len(otherGreen) == 0:
+                    outstr += '"None"\n'
+                else:
+                    label = ','.join(artMap[s+1] for s in otherGreen)
+                    outstr += '"' + label +'"\n'
+            
+            # add edges
+            outstr += '\nedge[style=dotted penwidth=0.4]\n\n'
+            for edge in self.edgesBin:
+                # red dotted eddges
+                if (edge[0] in self.allMIS or edge[0] in self.otherRed) \
+                    and (edge[1] in self.allMIS or edge[1] in self.otherRed):
+                    start = ','.join(artMap[s+1] for s in edge[0])
+                    end = ','.join(artMap[s+1] for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [color="#CC0000"]\n'
+                if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
+                    and (edge[1] in self.allMCS or edge[1] in self.otherGreen):
+                    if len(edge[0]) == 0:
+                        start = 'None'
+                    else:
+                    # green dotted edges
+                        start = ','.join(artMap[s+1] for s in edge[0])
+                    end = ','.join(artMap[s+1] for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [dir=back color="#006400"]\n'
+                if (edge[0] in self.allMCS or edge[0] in self.otherGreen) \
+                    and (edge[1] in self.allMIS or edge[1] in self.otherRed):
+                    if len(edge[0]) == 0:
+                        start = 'None'
+                    else:
+                        start = ','.join(artMap[s+1] for s in edge[0])
+                    end = ','.join(artMap[s+1] for s in edge[1])
+                    outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'           
         outstr += "}"
         return outstr
     
