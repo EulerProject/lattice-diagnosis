@@ -14,7 +14,7 @@ lines = inputFile.readlines()
 for line in lines:
     inputRules.append(line)
 tax.allJustifications(map(int, inputRules),gcd.has_common_prime)
-lat = diaglattice.DiagnosticLattice('MIS.txt')
+lat = diaglattice.DiagnosticLattice('MIS.txt', False)
 lat.genLattice()
 
 f = open('fullLattice.dot', 'w')
