@@ -30,17 +30,11 @@ import re
 
 class DiagnosticLattice:
     
-    def __init__(self, MISFile, legend = True):
+    def __init__(self, allMIS, art, legend = True):
         self.inputFile = 'in.txt'
         self.art = []
         self. legend = legend
-        # get articulations from input
-        f = open(self.inputFile, 'r')
-        lines = f.readlines()
-        for line in lines:
-                self.art.append(line.strip())
-        f.close()
-        self.art = map(int, self.art)
+        self.art = art
         self.allMCS = set()
         self.otherRed = set()
         self.allGreen = set()
@@ -49,18 +43,6 @@ class DiagnosticLattice:
         self.edgesBin = []
         self.latVizNodes = {}
         self.latVizEdges = {}
-        allMIS = set()
-        fMIS = open(MISFile, "r")
-        lines = fMIS.readlines()
-        for line in lines:
-            aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(",")
-            aMISString = list(map(int, aMISString))
-            nMISString = []
-            for a in aMISString:
-                nMISString.append(self.art.index(a))
-            aMIS = frozenset(map(int, nMISString))
-            allMIS.add(aMIS)
-        fMIS.close()
         self.allMIS = allMIS
     
     def findSupSets(self, aFrozenset, setOfFronzensets):

@@ -2,40 +2,36 @@ import diagnostics
 import diaglattice
 import re
 # example file
-import gcd
+import prob
 
-#  Cosistency in this example is defined as having a common prime factor
-#  Given an inconsistent set of numbers, we are using the diagnostics approach to find the minium inconsistent subset
-inputRules = list()
 tax = diagnostics.lattice([])
-
-inputFile = open('in.txt', 'r')
+inputRules = []
+inputFile = open('ur.dlv', 'r')
 lines = inputFile.readlines()
 for line in lines:
-    inputRules.append(line)
-tax.allJustifications(map(int, inputRules),gcd.has_common_prime)
+    inputRules.append(line.strip())
+tax.allJustifications(inputRules,prob.diag)
 
 
 # get articulations from input
 art = inputRules
-art = map(int, art)
 allMIS = set()
 fMIS = open('MIS.txt', "r")
 lines = fMIS.readlines()
 for line in lines:
-    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(",")
+    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(".,")
     #aMISString = list(map(int, aMISString))
     nMISString = []
     for a in aMISString:
-        nMISString.append(art.index(int(a)))
+        if a[-1] != '.':
+            a = a + '.'
+        nMISString.append(art.index(a))
     aMIS = frozenset(map(int, nMISString))
     allMIS.add(aMIS)
 fMIS.close()
+
 lat = diaglattice.DiagnosticLattice(allMIS, art)
 #lat = diaglattice.DiagnosticLattice(allMIS, art, False)
-
-
-
 
 lat.genLattice()
 
@@ -48,3 +44,4 @@ f = open('reducedLattice.dot', 'w')
 reducedLatStr = lat.reducedLatViz()
 f.write(reducedLatStr)
 f.close()
+

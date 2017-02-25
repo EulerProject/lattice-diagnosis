@@ -1,0 +1,11 @@
+lineage(d18).
+lineage(d19).
+anonymize(d11).
+anonymize(d12).
+hide_node(c1).
+hide_node(c2).
+hide_node(d18).
+hide_edge(d18,c1).
+abstract(m1,g1).
+abstract(s1,g1).
+abstract(d14,g1).

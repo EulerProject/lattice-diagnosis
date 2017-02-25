@@ -43,7 +43,6 @@ class lattice:
         
     def computeAllJust(self, artSet, justSet, curpath, allpaths, diagnosisOracle):
         f = self.internalfile
-
         # prepare cashed path
         for path in allpaths:
             if path.issubset(curpath):
@@ -53,13 +52,11 @@ class lattice:
         if diagnosisOracle(artSet):
             allpaths.add(curpath)
             return
-                            
         # prepare the justification set
         j = sets.Set()
         for s in justSet:
             if len(s.intersection(curpath)) == 0:
                 j = s
-                
         # check the justification set
         if len(j) == 0:
             j = self.computeOneJust(artSet, diagnosisOracle)

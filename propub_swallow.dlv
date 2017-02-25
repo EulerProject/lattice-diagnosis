@@ -1,0 +1,133 @@
+#maxint=200.
+
+%%%%%%%%%%%%%%%%%%%%%% States %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% State generation 
+next(0,1).
+next(S,S1) :-		% S1 (=S+1) is a state,
+	next(_,S),	% ... if S is a state
+	change(S),	% ... which changes
+	S1=S+1,
+	S1<10.    
+
+% final(S)
+final(S) :-		% S is the final state
+	next(_,S),     
+	not change(S).	% ... if there is no change in S
+
+% change(S)
+change(0).		% in 0 there is change
+change(S) :-
+        del_dep(_,_,S).
+change(S) :-
+        ins_dep(_,_,S).
+        
+%%%%%%%%%%%%%%%%%%%%%%%%%% Lineage %%%%%%%%%%%%%%%%%%%%%%%%
+
+dep(X,Y,0) :- 
+	used(X,Y).
+dep(X,Y,0) :- 
+	gen_by(X,Y).
+
+l_dep(X,Y,0) :- 
+	lineage(X), 
+	dep(X,Y,0).
+l_dep(Y,Z,0) :- 
+	l_dep(X,Y,0), 
+	dep(Y,Z,0).
+
+%%%%%%%%%%%%%%%%% Frame Rules %%%%%%%%%%%%%%%
+
+del_dep(X,Y,0) :- 
+	hide_edge(X,Y), 
+	l_dep(X,Y,0).
+del_dep(X,Y,0) :- 
+	hide_node(X), 
+	l_dep(X,Y,0).
+del_dep(X,Y,0) :- 
+	hide_node(Y), 
+	l_dep(X,Y,0).
+
+s_abstract(X,G,0) :- 
+	abstract(X,G).
+	
+del_dep(X,Y,S) :- 
+	s_abstract(X,_,S), 
+	l_dep(X,Y,S).
+del_dep(X,Y,S) :- 
+	s_abstract(Y,_,S), 
+	l_dep(X,Y,S).
+
+int_dep(X,Y,S) :- 
+	s_abstract(X,_,S), 
+	s_abstract(Y,_,S), 
+	l_dep(X,Y,S).
+
+ins_dep(G,Y,S) :- 
+	s_abstract(X,G,S), 
+	l_dep(X,Y,S),
+	not int_dep(X,Y,S).
+ins_dep(X,G,S) :- 
+	s_abstract(Y,G,S), 
+	l_dep(X,Y,S),
+	not int_dep(X,Y,S).
+
+l_dep(X,Y,S1) :- 
+        next(S,S1),
+	l_dep(X,Y,S),
+	not del_dep(X,Y,S).
+l_dep(X,Y,S1) :- 
+        next(S,S1), 
+	ins_dep(X,Y,S).
+
+%%%%%%%%%%%%%%%%% IC Rules %%%%%%%%%%%%%%%
+
+tcdep(X,Y,S) :- l_dep(X,Y,S).
+tcdep(X,Y,S) :- tcdep(X,Z,S), tcdep(Z,Y,S).
+
+nc(X,Y,S) :- 
+ 	tcdep(X,Y,S), 
+ 	tcdep(Y,X,S), 
+ 	X!=Y. 
+ 
+nfs(X,Y,S) :- 
+ 	l_dep(X,Y,S), 
+ 	data(X,_), 
+ 	data(Y,_).
+nfs(X,Y,S) :- 
+ 	l_dep(X,Y,S), 
+ 	actor(X,_), 
+ 	actor(Y,_).
+ 	
+wc(X,Y,S) :- 
+	l_dep(X,Y,S),
+	l_dep(X,Z,S),
+	data(X,_),
+	actor(Y,_),
+	actor(Z,_),
+	not Y=Z. 	
+
+%%%%%%%%%%%%%%%%% Fixes for IC violations %%%%%%%%%%%%%%%
+
+same_group(X,Y,S) :- 
+	nc(X,Y,S). 
+
+same_group(X,X,S) :- 
+	same_group(X,_,S).     % reflexive
+same_group(X,X,S) :- 
+	same_group(_,X,S).     % reflexive
+same_group(X,Y,S) :- 
+	same_group(Y,X,S).     % symmetric
+same_group(X,Y,S) :- 
+	same_group(X,Z,S), 
+	same_group(Z,Y,S).     % transitive
+
+smaller(X,S) :- 
+	same_group(X,Y,S), X < Y. 
+	
+minimum(X,S) :- 
+	same_group(X,_,S), not smaller(X,S). 
+	
+s_abstract(X,G,S) :- 
+	same_group(X,G,S), 
+	minimum(G,S). 
