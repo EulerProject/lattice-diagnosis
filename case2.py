@@ -35,12 +35,12 @@ lat = diaglattice.DiagnosticLattice(allMIS, art)
 
 lat.genLattice()
 
-f = open('fullLattice.dot', 'w')
+f = open('fullLattice.gv', 'w')
 fullLatStr = lat.fullLatViz()
 f.write(fullLatStr)
 f.close()
 
-f = open('reducedLattice.dot', 'w')
+f = open('reducedLattice.gv', 'w')
 reducedLatStr = lat.reducedLatViz()
 f.write(reducedLatStr)
 f.close()
