@@ -175,7 +175,7 @@ class DiagnosticLattice:
                     end = ','.join(str(s+1) for s in edge[1])
                     outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid]\n'
             # add legend
-            artsLabels = ""
+            artsLabels = "<TR> \n <TD> # </TD>\n <TD> Policy Label </TD>\n </TR>\n"
             for art in self.art:
                 artsLabels += "<TR> \n <TD>" + str(self.art.index(art)+1) + "</TD> \n <TD>" + art + "</TD> \n </TR> \n"
             outstr += "node[shape=plaintext fontsize=12 color=black] \n"
@@ -295,7 +295,8 @@ class DiagnosticLattice:
                 end = 'AllOtherRed'
                 outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid label='+str(len(self.art)-len(mcs))+']\n'
         # add legend
-        artsLabels = ""
+        '''
+        artsLabels = "<TR> \n <TD> # </TD>\n <TD> Policy Label </TD>\n <\TR>\n"
         for art in self.art:
             artsLabels += "<TR> \n <TD>" + str(self.art.index(art)+1) + "</TD> \n <TD>" + art + "</TD> \n </TR> \n"
         outstr += "node[shape=plaintext fontsize=12 color=black fillcolor=white] \n"
@@ -306,7 +307,8 @@ class DiagnosticLattice:
             outstr += 'Legend -> "AllOtherGreen" [style=invis]\n'
         else:
             outstr += 'Legend -> "None" [style=invis]\n'
-  
+            '''
+          
         outstr += "}"
         return outstr
     
