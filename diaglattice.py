@@ -294,7 +294,6 @@ class DiagnosticLattice:
                 start = ','.join(str(s+1) for s in mcs)
                 end = 'AllOtherRed'
                 outstr += '"' + start + '" -> "' + end +'" [arrowhead=none color="#C0C0C0" penwidth=1 style=solid label='+str(len(self.art)-len(mcs))+']\n'
-        '''
         # add legend
         artsLabels = ""
         for art in self.art:
@@ -307,7 +306,7 @@ class DiagnosticLattice:
             outstr += 'Legend -> "AllOtherGreen" [style=invis]\n'
         else:
             outstr += 'Legend -> "None" [style=invis]\n'
-        '''
+  
         outstr += "}"
         return outstr
     
