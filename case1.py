@@ -9,11 +9,11 @@ import gcd
 inputRules = list()
 tax = diagnostics.lattice([])
 
-inputFile = open('in.txt', 'r')
+inputFile = open('in3.txt', 'r')
 lines = inputFile.readlines()
 for line in lines:
-    inputRules.append(line)
-tax.allJustifications(map(int, inputRules),gcd.has_common_prime)
+    inputRules.append(line.strip())
+tax.allJustifications(inputRules,gcd.has_common_prime)
 
 
 # get articulations from input
@@ -23,7 +23,7 @@ allMIS = set()
 fMIS = open('MIS.txt', "r")
 lines = fMIS.readlines()
 for line in lines:
-    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(",")
+    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split("&")
     #aMISString = list(map(int, aMISString))
     nMISString = []
     for a in aMISString:

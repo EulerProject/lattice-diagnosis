@@ -19,12 +19,10 @@ allMIS = set()
 fMIS = open('MIS.txt', "r")
 lines = fMIS.readlines()
 for line in lines:
-    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split(".,")
+    aMISString = re.match("(.*)\[(.*)\](.*)", line).group(2).split("&")
     #aMISString = list(map(int, aMISString))
     nMISString = []
     for a in aMISString:
-        if a[-1] != '.':
-            a = a + '.'
         nMISString.append(art.index(a))
     aMIS = frozenset(map(int, nMISString))
     allMIS.add(aMIS)

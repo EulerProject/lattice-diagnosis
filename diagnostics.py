@@ -66,8 +66,8 @@ class lattice:
                 print "Min inconsistent subset ",self.fixedCnt,": [",
                 for i in range(len(lj)):
                     if i != 0:
-                        f.write(",")
-                        print ",",
+                        f.write("&")
+                        print "&",
                     f.write(str(lj[i]))
                     print lj[i],
                 f.write("]\n")

@@ -16,7 +16,7 @@ def gcd_list(Xs):
     return result
 
 def has_common_prime(Xs):
-    return gcd_list(Xs) > 1
+    return gcd_list(map(int, Xs)) > 1
 
 if __name__ == "__main__":
     L1 = [24,54,12]
